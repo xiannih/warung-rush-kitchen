@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warung Kilat — Rush Hour Kitchen</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #2b1a12; height: 100%; }
+  body { display: flex; align-items: center; justify-content: center; font-family: "Trebuchet MS", Verdana, sans-serif; }
+  #wrap { width: min(1280px, 100vw); }
+  canvas { display: block; width: 100%; height: auto; background: #ffe8c2; cursor: pointer; }
+  #note { color: #ffd166; text-align: center; font-size: 13px; padding: 6px 0 0; margin: 0; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="game" width="1280" height="800"></canvas>
+  <p id="note">WARUNG KILAT — masak, sajikan, jangan biarkan pelanggan pergi! Klik atau pakai keyboard: 1-4 pesanan, Q/W/E/R masak, SPASI sajikan, P jeda.</p>
+</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
