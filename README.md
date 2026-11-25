@@ -4,7 +4,15 @@
 [![rank](https://make.fun/badge/best-cooking-game-20261125-0137/xiannih/warung-rush-kitchen/rank.svg)](https://make.fun/bounty/best-cooking-game-20261125-0137/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=best-cooking-game-20261125-0137)
 [![reward](https://make.fun/badge/best-cooking-game-20261125-0137/xiannih/warung-rush-kitchen/reward.svg)](https://make.fun/bounty/best-cooking-game-20261125-0137?utm_source=github&utm_medium=readme&utm_campaign=best-cooking-game-20261125-0137)
 
-**Warung Kilat — Rush Hour Kitchen**: a complete, original Indonesian warung cooking game. Run a busy street-food kitchen: take named orders (nasi goreng, mie goreng, sate ayam, ayam geprek, gado-gado, es teh), cook each dish step by step across four stations (chop, fry, grill, boil), plate it mid-assembly, and serve before customers lose patience — for coins, tips and combos across five ever-busier days.
+**Warung Kilat — Rush Hour Kitchen**: a complete, original Indonesian warung cooking game. Run a busy street-food kitchen: take named orders (nasi goreng, mie goreng, sate ayam, ayam geprek, gado-gado, es teh), cook each dish step by step across four stations (chop, fry, grill, boil), watch the plate fill in as you cook, and serve before customers lose patience — for coins, tips and combos across five ever-busier days.
+
+## What's in v2
+
+- Every dish is drawn as itself: sate on skewers, noodle strands, smashed fried chicken with sambal, gado-gado vegetables in peanut sauce, iced tea in a glass — and each plate fills in layer by layer as its steps finish.
+- The pantry now sits in two full rows of six, so every ingredient chip (including Saus Kacang) is visible.
+- The day-complete screen is a full ledger: dishes served by name with counts, money split into food vs tips, served vs walkouts, best combo, target vs earned, and a preview of the next day.
+- The kitchen is alive: tiled wall, wok flames, grill coals, steam over the pot, and named customers with their own colours — while every ticket, timer and price stays legible.
+- Title footer, busy-station progress bars and all text sit comfortably inside the 1280×800 frame.
 
 ## Run it
 
@@ -18,8 +26,8 @@ Or serve `game/` with any static HTTP server and open `index.html`. The game is 
 ## How to play
 
 - Click an order on the order board (or press 1–4) to select it.
-- Cook its next step at the right station: CHOP [Q], FRY [W], GRILL [E], BOIL [R].
-- When every step is done, the dish is plated — click SAJIKAN or press SPACE to serve for coins + tip.
+- Cook its next step at the right station: CHOP [Q], FRY [W], GRILL [E], BOIL [R]. The station for the next step is highlighted.
+- When every step is done, the dish is plated — click SAJIKAN or press SPACE to serve for coins + a patience-based tip.
 - Reach the day's money target before the timer ends. If 3 customers walk out, the warung closes.
 - P pauses, M toggles sound, H shows how to play.
 

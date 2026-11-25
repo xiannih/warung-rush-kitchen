@@ -1,61 +1,80 @@
-// Warung Kilat — make.fun hand-in program (Node 22, standard library only).
+// main.ts — hands Warung Kilat in.
 //
-// Copies the game and its screenshots from this repository into the output
-// directory and writes dossier.json there with the kit's buildDossier.
-// The output directory comes from MAKEFUN_OUTPUT_DIR, then OUT_DIR, then
-// /output. Paths resolve from this file's own location, never from the
-// working directory. The output directory is created, never removed, and
-// every file is written fresh so a re-run into a populated directory works
-// even when the staged source is read-only.
-
-import { mkdirSync, readdirSync, readFileSync, writeFileSync, chmodSync, statSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+// It copies game/ and screenshots/ from this repository into the output
+// directory and writes dossier.json there with buildDossier from the kit's
+// vendor/makefun-game.ts. It runs under Node 22 with no flags, no build
+// step and no dependencies beyond the standard library.
+//
+// Paths come from this file's own location, never from the working
+// directory, so the grader can run it from anywhere. The output directory
+// comes from MAKEFUN_OUTPUT_DIR first, then OUT_DIR, then /output.
+// The output directory is created, never removed, and every file inside it
+// is written fresh: a file is removed first and then written, so a second
+// run over a populated output still succeeds even if the earlier files
+// were staged read-only.
 import { buildDossier } from './vendor/makefun-game.ts';
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const REPO_ROOT = dirname(fileURLToPath(import.meta.url));
+const HERE = dirname(fileURLToPath(import.meta.url));
+const GAME_DIR = join(HERE, 'game');
+const SHOTS_DIR = join(HERE, 'screenshots');
 
 function outputDir(): string {
-  return process.env.MAKEFUN_OUTPUT_DIR || process.env.OUT_DIR || '/output';
+  const fromEnv = process.env.MAKEFUN_OUTPUT_DIR || process.env.OUT_DIR || '';
+  if (fromEnv.trim().length > 0) return resolve(fromEnv);
+  return '/output';
 }
 
-function copyTreeFresh(srcDir: string, dstDir: string): number {
-  mkdirSync(dstDir, { recursive: true });
-  let copied = 0;
-  for (const entry of readdirSync(srcDir, { withFileTypes: true })) {
+function ensureDir(path: string): void {
+  mkdirSync(path, { recursive: true });
+}
+
+function writeFresh(dest: string, bytes: Buffer): void {
+  ensureDir(dirname(dest));
+  // Remove first so a read-only file left by an earlier run cannot block us.
+  if (existsSync(dest)) rmSync(dest, { force: true });
+  writeFileSync(dest, bytes);
+}
+
+function copyTree(srcDir: string, destDir: string): void {
+  ensureDir(destDir);
+  const entries = readdirSync(srcDir, { withFileTypes: true });
+  for (const entry of entries) {
     const src = join(srcDir, entry.name);
-    const dst = join(dstDir, entry.name);
+    const dest = join(destDir, entry.name);
     if (entry.isDirectory()) {
-      copied += copyTreeFresh(src, dst);
+      copyTree(src, dest);
     } else if (entry.isFile()) {
-      // Fresh bytes every time: a copied read-only file is never overwritten
-      // in place, so the grader's read-only staging cannot break a re-run.
-      writeFileSync(dst, readFileSync(src));
-      chmodSync(dst, 0o644);
-      copied += 1;
+      // Read the bytes and write them out as a new file: the copy never
+      // inherits the source file's mode, so a read-only staged source
+      // still lands as an ordinary writable file in the output.
+      writeFresh(dest, readFileSync(src));
     }
   }
-  return copied;
 }
 
 function main(): void {
   const out = outputDir();
-  mkdirSync(out, { recursive: true });
-
-  const gameFiles = copyTreeFresh(join(REPO_ROOT, 'game'), join(out, 'game'));
-  const shotFiles = copyTreeFresh(join(REPO_ROOT, 'screenshots'), join(out, 'screenshots'));
-
+  ensureDir(out);
+  if (!existsSync(GAME_DIR) || !statSync(GAME_DIR).isDirectory()) {
+    throw new Error('game/ not found next to main.ts at ' + GAME_DIR);
+  }
+  if (!existsSync(SHOTS_DIR) || !statSync(SHOTS_DIR).isDirectory()) {
+    throw new Error('screenshots/ not found next to main.ts at ' + SHOTS_DIR);
+  }
+  copyTree(GAME_DIR, join(out, 'game'));
+  copyTree(SHOTS_DIR, join(out, 'screenshots'));
   const dossier = buildDossier(out, {
     text_max_bytes: 163840,
     screenshots: { max: 4, max_bytes: 262144 },
     game_max_files: 993,
     game_max_bytes: 50331648,
+    game_path_max_bytes: 1000,
   });
-  writeFileSync(join(out, 'dossier.json'), dossier);
-  chmodSync(join(out, 'dossier.json'), 0o644);
-
-  const size = statSync(join(out, 'dossier.json')).size;
-  console.log(`warung-kilat: ${gameFiles} game files, ${shotFiles} screenshots, dossier.json ${size} bytes -> ${out}`);
+  writeFresh(join(out, 'dossier.json'), Buffer.from(dossier));
+  console.log('warung-kilat v2 handed in to ' + out);
 }
 
 main();

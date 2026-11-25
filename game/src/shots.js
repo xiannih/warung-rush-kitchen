@@ -1,67 +1,129 @@
-// Warung Kilat — deterministic screenshot scenes for ?shot=1..4.
-// Each shot is a real render of the live game state, staged so the judge
-// sees a different, complete moment: title, busy mid-play, low timer with a
-// queue, and a served / day-complete moment.
+// shots.js — deterministic staging for screenshots and play-tests.
+// The game itself never calls these during normal play; they exist so a
+// screenshot can show a real render of a specific moment (a busy mid-play,
+// a low-timer rush, a finished day) without waiting for chance to arrange it.
+// Every value they set is a value the live game can reach on its own.
+(function (global) {
+  'use strict';
 
-import { makeOrder } from './state.js';
-import { planForDay, CUSTOMERS } from './data.js';
+  var C = global.WarungCatalog;
+  var K = global.WarungKitchen;
 
-function placeOrder(state, dishId, customerName, patience, stepIndex, doneSteps) {
-  const plan = planForDay(state.day);
-  const cust = CUSTOMERS.find((c) => c.name === customerName) || { name: customerName, colour: '#3a86ff', face: customerName[0] };
-  const order = makeOrder(state.day, plan, dishId, cust);
-  order.patience = patience;
-  order.patienceMax = plan.patience;
-  order.stepIndex = stepIndex;
-  order.doneSteps = doneSteps.slice();
-  order.state = stepIndex >= 3 && dishId !== 'es-teh' ? 'ready' : 'waiting';
-  if (dishId === 'es-teh' && stepIndex >= 2) order.state = 'ready';
-  state.orders.push(order);
-  return order;
-}
-
-export function applyShot(state, n) {
-  if (n === 1) {
-    state.screen = 'title';
-    return;
+  function customerNamed(name) {
+    for (var i = 0; i < C.CUSTOMERS.length; i++) {
+      if (C.CUSTOMERS[i].name === name) return C.CUSTOMERS[i];
+    }
+    return C.CUSTOMERS[0];
   }
-  // Shots 2-4 are live play states on day 2 (busier board, bigger numbers).
-  state.day = 2;
-  state.money = 87400;
-  state.score = 2450;
-  state.combo = 3;
-  state.bestCombo = 4;
-  state.served = 6;
-  state.walkouts = 1;
-  state.screen = 'play';
-  state.dayTimeLeft = n === 3 ? 18 : 96;
-  state.spawnTimer = 99;
 
-  if (n === 2) {
-    // Busy mid-play: three orders, one dish mid-assembly, one station cooking.
-    const a = placeOrder(state, 'nasi-goreng', 'Budi', 32, 1, ['Bawang']);
-    placeOrder(state, 'sate-ayam', 'Siti', 26, 0, []);
-    placeOrder(state, 'es-teh', 'Agus', 38, 0, []);
-    state.selectedId = a.id;
-    const fry = state.stations.find((s) => s.id === 'fry');
-    fry.busy = true; fry.orderId = a.id; fry.duration = 4; fry.progress = 0.55; fry.label = 'Nasi + Telur';
-  } else if (n === 3) {
-    // Low timer, four orders waiting, one ready to serve, grill almost done.
-    const a = placeOrder(state, 'mie-goreng', 'Rina', 9, 2, ['Mie', 'Sayur']);
-    placeOrder(state, 'ayam-geprek', 'Dewi', 12, 0, []);
-    placeOrder(state, 'gado-gado', 'Joko', 15, 1, ['Sayur + Telur']);
-    const d = placeOrder(state, 'es-teh', 'Maya', 22, 2, ['Teh', 'Es Batu']);
-    state.selectedId = d.id;
-    const grill = state.stations.find((s) => s.id === 'grill');
-    grill.busy = true; grill.orderId = a.id; grill.duration = 3.5; grill.progress = 0.45; grill.label = 'Mie + Bumbu';
-    state.rush = true;
-  } else if (n === 4) {
-    // Day complete: money over target, plate served, celebration screen.
-    state.dayTimeLeft = 0;
-    state.dayStartMoney = 0;
-    state.money = 132000;
-    state.dayResult = { won: true, target: 90000, money: 132000, reason: '' };
-    state.screen = 'dayend';
-    state.served = 9;
+  function makeOrder(k, dishId, customerName, patience, done) {
+    var o = K.spawnOrder(k, C.dishById(dishId), customerNamed(customerName), patience);
+    o.done = done || 0;
+    o.ready = o.done >= o.dish.steps.length;
+    return o;
   }
-}
+
+  // Day 2, mid-rush: three tickets, one dish half built, the wok at 84%.
+  function stageMid(k) {
+    K.startDay(k, 2);
+    k.money = 87400;
+    k.score = 2450;
+    k.combo = 3;
+    k.bestCombo = 4;
+    k.served = 6;
+    k.timeLeft = 95;
+    k.orders = [];
+    k.nextOrderId = 1;
+    makeOrder(k, 'nasi', 'Budi', 31, 1);
+    makeOrder(k, 'sate', 'Siti', 25, 0);
+    makeOrder(k, 'esteh', 'Agus', 37, 0);
+    k.selected = 0;
+    k.busy = { station: 'fry', orderId: 1, stepIdx: 1, t: 1.26, dur: 1.5, label: 'Nasi + Telur' };
+    k.spawnIn = 6;
+    k.flash = '';
+    k.frozen = true;
+  }
+
+  // The last seconds: 0:17 on the clock, four tickets, one plate ready.
+  function stageRush(k) {
+    K.startDay(k, 2);
+    k.money = 87400;
+    k.score = 2450;
+    k.combo = 3;
+    k.bestCombo = 4;
+    k.served = 6;
+    k.timeLeft = 17;
+    k.orders = [];
+    k.nextOrderId = 1;
+    makeOrder(k, 'mie', 'Rina', 8, 2);
+    makeOrder(k, 'geprek', 'Dewi', 11, 0);
+    makeOrder(k, 'gado', 'Joko', 14, 1);
+    makeOrder(k, 'esteh', 'Maya', 21, 2);
+    k.selected = 3;
+    k.busy = { station: 'fry', orderId: 2, stepIdx: 0, t: 1.15, dur: 1.5, label: 'Ayam digoreng' };
+    k.spawnIn = 6;
+    k.flash = '';
+    k.frozen = true;
+  }
+
+  // A finished day with a full ledger to show for it.
+  function stageDayDone(k) {
+    K.startDay(k, 2);
+    k.money = 132000;
+    k.dayMoney = 132000;
+    k.score = 2450;
+    k.served = 9;
+    k.walkouts = 1;
+    k.bestCombo = 4;
+    k.dayStats = {
+      food: 110000,
+      tips: 22000,
+      served: 9,
+      walkouts: 1,
+      bestCombo: 4,
+      perDish: { 'NASI GORENG': 3, 'SATE AYAM': 2, 'ES TEH MANIS': 2, 'MIE GORENG': 1, 'AYAM GEPREK': 1 }
+    };
+    k.screen = 'daydone';
+    k.busy = null;
+    k.orders = [];
+  }
+
+  function stageShot(k, name) {
+    if (name === 'title') {
+      var fresh = K.newKitchen();
+      var keys = Object.keys(fresh);
+      for (var i = 0; i < keys.length; i++) k[keys[i]] = fresh[keys[i]];
+      k.screen = 'title';
+      return 'title';
+    }
+    if (name === 'mid') { stageMid(k); return 'mid'; }
+    if (name === 'rush') { stageRush(k); return 'rush'; }
+    if (name === 'daydone') { stageDayDone(k); return 'daydone'; }
+    return null;
+  }
+
+  // A small read-only summary for automated play-tests.
+  function snapshot(k) {
+    var sel = K.selectedOrder(k);
+    return {
+      screen: k.screen,
+      day: k.day,
+      money: k.money,
+      dayMoney: k.dayMoney,
+      score: k.score,
+      combo: k.combo,
+      served: k.served,
+      walkouts: k.walkouts,
+      timeLeft: Math.round(k.timeLeft * 10) / 10,
+      target: k.target,
+      orders: k.orders.map(function (o) {
+        return { dish: o.dish.id, customer: o.customer.name, done: o.done, steps: o.dish.steps.length, ready: o.ready, patience: Math.round(o.patience) };
+      }),
+      selected: k.selected,
+      selectedNext: sel ? (sel.ready ? null : sel.dish.steps[sel.done]) : null,
+      busy: k.busy ? { station: k.busy.station, frac: Math.round((k.busy.t / k.busy.dur) * 100) / 100 } : null
+    };
+  }
+
+  global.WarungShots = { stageShot: stageShot, snapshot: snapshot };
+})(typeof window !== 'undefined' ? window : globalThis);

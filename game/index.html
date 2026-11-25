@@ -4,19 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Warung Kilat — Rush Hour Kitchen</title>
+<link rel="icon" href="data:,">
 <style>
-  html, body { margin: 0; padding: 0; background: #2b1a12; height: 100%; }
-  body { display: flex; align-items: center; justify-content: center; font-family: "Trebuchet MS", Verdana, sans-serif; }
-  #wrap { width: min(1280px, 100vw); }
-  canvas { display: block; width: 100%; height: auto; background: #ffe8c2; cursor: pointer; }
-  #note { color: #ffd166; text-align: center; font-size: 13px; padding: 6px 0 0; margin: 0; }
+  html, body { margin: 0; padding: 0; background: #2b1a0e; }
+  body { display: flex; align-items: flex-start; justify-content: center; }
+  canvas { display: block; width: 1280px; height: 800px; background: #fdf3d8; }
 </style>
 </head>
 <body>
-<div id="wrap">
-  <canvas id="game" width="1280" height="800"></canvas>
-  <p id="note">WARUNG KILAT — masak, sajikan, jangan biarkan pelanggan pergi! Klik atau pakai keyboard: 1-4 pesanan, Q/W/E/R masak, SPASI sajikan, P jeda.</p>
-</div>
-<script type="module" src="./src/main.js"></script>
+<canvas id="game" width="1280" height="800"></canvas>
+<script src="src/catalog.js"></script>
+<script src="src/sound.js"></script>
+<script src="src/kitchen.js"></script>
+<script src="src/draw.js"></script>
+<script src="src/controls.js"></script>
+<script src="src/shots.js"></script>
+<script src="src/boot.js"></script>
 </body>
 </html>
