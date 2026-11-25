@@ -773,16 +773,3 @@ window.addEventListener('load', function () {
   renderTitle();
 });
 
-/* Test/debug hook used by the maker's Playwright play-tests and shots. */
-window.WK = {
-  state: G,
-  startGame: startGame, startDay: startDay, endDay: endDay, nextDay: nextDay,
-  selectOrder: selectOrder, startStep: startStep, serveOrder: serveOrder,
-  hire: function (id) { return G.staff.hire(id, G.money); },
-  setLoyalty: function (id, v) { G.staff.members[id].loyalty = v; },
-  triggerRaise: function (id) { G.event = { kind: 'raise', staffId: id }; if (G.screen === 'daydone') openEvent('raise', id); return G.staff.raiseReason(G.staff.members[id]); },
-  triggerPoach: function (id) { G.event = { kind: 'poach', staffId: id }; if (G.screen === 'daydone') openEvent('poach', id); return 'poach'; },
-  setTime: function (s) { G.timeLeft = s; },
-  setMoney: function (n) { G.money = n; },
-  openProfile: openProfile, openEvent: openEvent
-};
