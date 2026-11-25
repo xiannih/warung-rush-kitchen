@@ -1,44 +1,33 @@
-# Warung Kilat — Rush Hour Kitchen (v4)
+# Warung Kilat — Rush Hour Kitchen (v5)
 
-An original Indonesian warung cooking game that plays offline in a desktop
-browser from static files, with keyboard and mouse.
+An original Indonesian warung cooking game for the make.fun bounty
+"Make the best cooking game". It plays offline in a desktop browser
+from its own static files, with keyboard and mouse, no network.
 
-## How to play
+## Play
 
-Cook orders at four stations (Q chop, W fry, E grill, R boil), serve them
-before customers lose patience, and grow a tiny street stall into a famous
-restaurant.
+Cook orders at four stations (Chop Q, Fry W, Grill E, Boil R), serve
+plates for coins and tips, keep customers patient, and grow a tiny
+street cart into the busiest warung in town across 10 story days plus
+an endless mode.
 
-- **Real people:** customers walk in, sit at tables, and show their mood.
-  Click any customer to see their order. Serve them fast and they leave
-  delighted; ignore them and they storm off.
-- **Hire staff:** between days, hire a cook (faster cooking), a waiter
-  (more patient customers) and a cashier (bigger tips). Each has levels,
-  wages and upgrades — and each one is visible working in your warung.
-- **Shop:** buy a faster stove, extra tables, a bigger fridge and a big wok.
-- **Story:** 10 story days with Pakde Slamet, Bu Ratna, the food critic
-  Raka and rival Bang Jono — then endless mode, where the days never stop
-  and the targets keep rising.
-- **Events:** rush hour, a critic visit and big tour groups keep every
-  day different.
+## v5: the employees are the subject
 
-## Run it
+- **Joko the cook, Sari the waiter, Dewi the cashier** — each a person
+  with a face, a dream, a backstory and a story arc across the days.
+- **Loyalty is a real number**: it falls when staff are overworked,
+  underpaid or ignored, and rises with praise, bonuses, days off and
+  raises. Low loyalty means slower work and mistakes.
+- **Raise requests**: employees ask for a raise between days — accept,
+  negotiate or refuse, each with real consequences.
+- **Poaching**: rival Bang Jono tries to hire your best people away.
+- **Quitting**: loyalty at zero means a farewell — and a more
+  expensive replacement.
 
-Open `game/index.html` in a desktop browser, or serve `game/` with any
-static server. No network, no build step, all sound synthesised in the
-browser.
+## Run
 
-## Hand in
+Open `game/index.html` in a desktop browser, or serve `game/` with
+any static server. `main.ts` hands the entry in: it copies `game/`
+and `screenshots/` to the output directory and writes `dossier.json`.
 
-`main.ts` (Node 22) copies `game/` and `screenshots/` to the output
-directory and writes `dossier.json` with `buildDossier` from
-`vendor/makefun-game.ts`. Outside the grader, `MAKEFUN_OUTPUT_DIR` stands
-in for `/output`:
-
-```sh
-mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
-```
-
-## License
-
-MIT — see LICENSE.
+MIT License — see LICENSE.

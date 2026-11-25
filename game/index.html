@@ -8,121 +8,18 @@
 </head>
 <body>
 <div id="app">
-
-  <!-- TITLE -->
-  <section id="screen-title" class="screen">
-    <div class="awning"></div>
-    <h1 class="logo">WARUNG KILAT</h1>
-    <p class="tagline">— Rush Hour Kitchen —</p>
-    <p class="pitch">Dari gerobak kecil di pinggir jalan sampai restoran paling ramai di kota.
-      Masak cepat, sajikan hangat, rekrut karyawan, dan tulis ceritamu sendiri.</p>
-    <div id="title-dishes" class="dish-row"></div>
-    <button class="btn big" data-action="start">▶ MULAI MASAK &nbsp;[ENTER]</button>
-    <button class="btn ghost" data-action="howto">CARA MAIN &nbsp;[H]</button>
-    <p class="title-feats">10 hari cerita • mode tanpa batas • 3 karyawan bisa direkrut • toko upgrade</p>
-    <p class="title-note">Suara disintesis di browser — tanpa file eksternal, tanpa internet.</p>
-  </section>
-
-  <!-- HOW TO -->
-  <section id="screen-howto" class="screen">
-    <h2 class="screen-title">CARA MAIN</h2>
-    <div class="howto-grid">
-      <div class="howto-card">
-        <h3>🍳 MASAK</h3>
-        <p>Klik pesanan (1–4), lalu masak langkahnya di stasiun:
-          <b>Q</b> Potong, <b>W</b> Goreng, <b>E</b> Panggang, <b>R</b> Rebus.
-          Semua langkah selesai → tekan <b>SPASI</b> untuk menyajikan.</p>
-      </div>
-      <div class="howto-card">
-        <h3>🧑‍🤝‍🧑 ORANGNYA</h3>
-        <p>Pelanggan duduk di meja dan menunjukkan moodnya. Klik pelanggan
-          untuk melihat pesanannya. Layani cepat sebelum mereka pergi marah!</p>
-      </div>
-      <div class="howto-card">
-        <h3>👨‍🍳 REKRUT STAF</h3>
-        <p>Antar hari, rekrut koki, pelayan, dan kasir dengan koin. Mereka
-          bekerja di dapur dan ruang makan, dan bisa naik level.</p>
-      </div>
-      <div class="howto-card">
-        <h3>🛒 TOKO &amp; CERITA</h3>
-        <p>Beli kompor cepat, meja baru, dan kulkas besar. Setiap hari ada
-          cerita baru — dan setelah hari ke-10, mode tanpa batas dimulai.</p>
-      </div>
-    </div>
-    <p class="keys">1–4 pilih pesanan • Q/W/E/R masak • SPASI sajikan • P jeda • M suara • H bantuan</p>
-    <button class="btn big" data-action="start">▶ MULAI MASAK &nbsp;[ENTER]</button>
-    <button class="btn ghost" data-action="back-title">← KEMBALI</button>
-  </section>
-
-  <!-- STORY -->
-  <section id="screen-story" class="screen">
-    <div class="story-card">
-      <div id="story-face" class="story-face">🧑‍🍳</div>
-      <div class="story-body">
-        <p id="story-who" class="story-who">Pakde Slamet • Pemilik Warung</p>
-        <h2 id="story-head" class="story-head">Hari 1 — Gerobak Pertama</h2>
-        <p id="story-line1" class="story-line"></p>
-        <p id="story-line2" class="story-line"></p>
-        <p id="story-hint" class="story-hint"></p>
-      </div>
-    </div>
-    <button class="btn big" data-action="story-next">LANJUT &nbsp;[ENTER]</button>
-  </section>
-
-  <!-- PLAY -->
-  <section id="screen-play" class="screen">
-    <div id="topbar"></div>
-    <div id="event-banner" class="event-banner hidden"></div>
-    <div class="play-grid">
-      <div class="panel dining-panel">
-        <p class="panel-label">🍽️ RUANG MAKAN — klik pelanggan untuk melihat pesanannya</p>
-        <div id="dining"></div>
-        <div id="staff-strip"></div>
-      </div>
-      <div class="panel orders-panel">
-        <p class="panel-label">📋 ORDER BOARD — klik pesanan (1–4) lalu masak di stasiun</p>
-        <div id="tickets"></div>
-      </div>
-      <div class="panel stations-panel">
-        <p class="panel-label">🔥 STASIUN MASAK — klik stasiun (Q/W/E/R) untuk langkah berikutnya</p>
-        <div id="stations"></div>
-      </div>
-      <div class="panel plate-panel">
-        <div id="plate"></div>
-        <div id="serve"></div>
-      </div>
-      <div class="panel pantry-panel">
-        <p class="panel-label">🧺 BAHAN DI MEJA:</p>
-        <div id="pantry"></div>
-      </div>
-    </div>
-    <p class="footer-hints">Klik pesanan • 1–4 pilih pesanan • Q/W/E/R masak • SPASI sajikan • P jeda • M suara • H bantuan</p>
-    <div id="float-layer"></div>
-  </section>
-
-  <!-- DAY DONE -->
-  <section id="screen-daydone" class="screen">
-    <h2 id="done-title" class="screen-title">🎉 HARI SELESAI!</h2>
-    <p id="done-sub" class="done-sub"></p>
-    <div class="done-grid">
-      <div class="done-card" id="done-ledger"></div>
-      <div class="done-card" id="done-staff"></div>
-      <div class="done-card" id="done-shop"></div>
-    </div>
-    <p id="done-next" class="done-next"></p>
-    <button class="btn big" data-action="next-day">▶ HARI BERIKUTNYA &nbsp;[ENTER]</button>
-  </section>
-
-  <!-- GAME OVER -->
-  <section id="screen-over" class="screen">
-    <h2 class="screen-title over-title">😞 WARUNG TUTUP…</h2>
-    <p id="over-text" class="over-text"></p>
-    <div id="over-stats" class="over-stats"></div>
-    <button class="btn big" data-action="restart">↻ MULAI LAGI &nbsp;[ENTER]</button>
-    <button class="btn ghost" data-action="back-title">← MENU UTAMA</button>
-  </section>
-
+  <div id="screen-title" class="screen"></div>
+  <div id="screen-howto" class="screen" style="display:none"></div>
+  <div id="screen-play" class="screen" style="display:none"></div>
+  <div id="screen-daydone" class="screen" style="display:none"></div>
+  <div id="screen-over" class="screen" style="display:none"></div>
+  <div id="modal-profile" class="modal" style="display:none"></div>
+  <div id="modal-event" class="modal" style="display:none"></div>
+  <div id="floats"></div>
 </div>
-<script type="module" src="./src/game.js"></script>
+<script src="src/data.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/staff.js"></script>
+<script src="src/game.js"></script>
 </body>
 </html>
