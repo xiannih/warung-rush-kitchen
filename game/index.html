@@ -2,23 +2,88 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Warung Kilat — Rush Hour Kitchen</title>
-<link rel="icon" href="data:,">
-<style>
-  html, body { margin: 0; padding: 0; background: #2b1a0e; }
-  body { display: flex; align-items: flex-start; justify-content: center; }
-  canvas { display: block; width: 1280px; height: 800px; background: #fdf3d8; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<canvas id="game" width="1280" height="800"></canvas>
-<script src="src/catalog.js"></script>
-<script src="src/sound.js"></script>
-<script src="src/kitchen.js"></script>
-<script src="src/draw.js"></script>
-<script src="src/controls.js"></script>
-<script src="src/shots.js"></script>
-<script src="src/boot.js"></script>
+<div class="stage" id="stage">
+
+  <section class="screen screen-title" id="screen-title">
+    <div class="awning" aria-hidden="true"></div>
+    <h1 class="title-name">WARUNG KILAT</h1>
+    <p class="title-sub">— Rush Hour Kitchen —</p>
+    <p class="title-tag">Masak cepat, sajikan hangat, jangan biarkan pelanggan pergi!</p>
+    <div class="dish-row" id="dish-row"></div>
+    <button class="btn-big" id="btn-start" type="button">▶ MULAI MASAK&nbsp;&nbsp;[ENTER]</button>
+    <button class="btn-ghost" id="btn-help" type="button">CARA MAIN&nbsp;&nbsp;[H]</button>
+    <p class="title-foot">6 hidangan · 4 stasiun · 5 hari · keyboard + mouse</p>
+    <p class="title-foot2">Suara disintesis di browser — tanpa file eksternal, tanpa internet.</p>
+  </section>
+
+  <section class="screen screen-help" id="screen-help" hidden>
+    <div class="awning" aria-hidden="true"></div>
+    <h2 class="help-name">CARA MAIN</h2>
+    <div class="help-box" id="help-box"></div>
+    <button class="btn-big" id="btn-back" type="button">▶ KEMBALI&nbsp;&nbsp;[ESC]</button>
+  </section>
+
+  <section class="screen screen-play" id="screen-play" hidden>
+    <div class="topbar" id="topbar"></div>
+    <div class="board-head">📋 ORDER BOARD — klik pesanan (1–4) lalu masak di stasiun</div>
+    <div class="board-row" id="board-row"></div>
+    <div class="station-head">🔥 STASIUN MASAK — klik stasiun (Q/W/E/R) untuk langkah berikutnya</div>
+    <div class="station-row" id="station-row"></div>
+    <div class="plate-row">
+      <div class="plate-panel" id="plate-panel"></div>
+      <div class="serve-panel" id="serve-panel"></div>
+    </div>
+    <div class="pantry-head">🧂 BAHAN DI MEJA:</div>
+    <div class="pantry" id="pantry"></div>
+    <div class="hints">Klik pesanan · 1–4 pilih pesanan · Q/W/E/R masak · SPASI sajikan · P jeda · M suara · H bantuan</div>
+  </section>
+
+  <section class="screen screen-done" id="screen-done" hidden>
+    <div class="awning" aria-hidden="true"></div>
+    <h2 class="done-name" id="done-title">🎉 HARI 2 SELESAI!</h2>
+    <p class="done-sub" id="done-sub">Target Rp90.000 tercapai — warung makin ramai!</p>
+    <div class="done-grid">
+      <div class="done-card">
+        <h3>🍽 HIDANGAN HARI INI</h3>
+        <div id="done-dishes"></div>
+        <p class="done-total" id="done-total-dishes">Total disajikan: 9 piring</p>
+      </div>
+      <div class="done-side">
+        <div class="done-card">
+          <h3>💰 UANG HARI INI</h3>
+          <div class="money-row"><span>Makanan</span><b id="done-food">Rp110.000</b></div>
+          <div class="money-row"><span>Tips pelanggan</span><b id="done-tips">Rp22.000</b></div>
+          <div class="money-row money-total"><span>Total hari ini</span><b id="done-money">Rp132.000</b></div>
+        </div>
+        <div class="done-card">
+          <h3>📊 CATATAN HARI INI</h3>
+          <div class="stat-grid" id="done-stats"></div>
+          <p class="done-target" id="done-target">Target Rp90.000 vs dapat Rp132.000</p>
+          <div class="target-bar"><div class="target-fill" id="done-target-fill"></div></div>
+        </div>
+      </div>
+    </div>
+    <p class="done-next" id="done-next">BESOK — HARI 3: target Rp130.000 · pelanggan tiap 7 dtk · lebih tidak sabar</p>
+    <button class="btn-big" id="btn-next-day" type="button">▶ HARI BERIKUTNYA&nbsp;&nbsp;[ENTER]</button>
+  </section>
+
+  <section class="screen screen-over" id="screen-over" hidden>
+    <div class="awning" aria-hidden="true"></div>
+    <h2 class="over-name">😞 WARUNG TUTUP!</h2>
+    <p class="over-sub" id="over-sub">3 pelanggan pergi — warung tutup hari ini.</p>
+    <div class="over-box" id="over-box"></div>
+    <button class="btn-big" id="btn-restart" type="button">▶ COBA LAGI&nbsp;&nbsp;[ENTER]</button>
+    <p class="over-foot">Tips: sajikan pesanan sebelum bar kesabaran habis.</p>
+  </section>
+
+  <div class="toast" id="toast" hidden></div>
+</div>
+<script src="src/dishes.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/game.js"></script>
 </body>
 </html>
